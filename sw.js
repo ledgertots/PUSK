@@ -1,8 +1,8 @@
-const CACHE_NAME = 'pusk-v1';
+const CACHE_NAME = 'pusk-v2';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json'
+  '/PUSK/',
+  '/PUSK/index.html',
+  '/PUSK/manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
