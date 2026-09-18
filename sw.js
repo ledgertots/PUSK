@@ -1,14 +1,8 @@
-const CACHE_NAME = 'pusk-v2';
-const ASSETS = [
-  '/PUSK/',
-  '/PUSK/index.html',
-  '/PUSK/manifest.json'
-];
+// Bump this version string on every deploy that should force-refresh clients.
+const CACHE_NAME = 'pusk-v3';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(() => {})
-  );
+  // Don't pre-cache anything eagerly — always try the network first.
   self.skipWaiting();
 });
 
@@ -21,20 +15,20 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Network-first strategy: always try to get the latest version from the network.
+// Only fall back to the cache if the network is unavailable (offline).
+// This guarantees users always see the newest deploy while online.
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            try { cache.put(event.request, copy); } catch (e) {}
-          });
-          return response;
-        })
-        .catch(() => cached);
-    })
+    fetch(event.request, { cache: 'no-store' })
+      .then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          try { cache.put(event.request, copy); } catch (e) {}
+        });
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
