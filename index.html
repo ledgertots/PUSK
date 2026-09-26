@@ -7,7 +7,7 @@
 
 <!-- iOS PWA meta -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="PUSK">
 <meta name="theme-color" content="#0B0B0D">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1108,8 +1108,17 @@
     if (d) {
       const standalone = (window.navigator.standalone === true) ||
         (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-      const sab = getComputedStyle(document.documentElement)
-        .getPropertyValue('--safe-bottom').trim();
+      let probe = document.getElementById('sa-probe');
+      if (!probe) {
+        probe = document.createElement('div');
+        probe.id = 'sa-probe';
+        probe.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;' +
+          'padding-bottom:env(safe-area-inset-bottom,0px);' +
+          'padding-top:env(safe-area-inset-top,0px);';
+        document.body.appendChild(probe);
+      }
+      const cs = getComputedStyle(probe);
+      const sab = cs.paddingBottom + ' top ' + cs.paddingTop;
       d.textContent =
         (standalone ? 'INSTALADA (standalone)' : 'SAFARI (con barra)') +
         '  ·  visible ' + h + '  pantalla ' + window.screen.height +
