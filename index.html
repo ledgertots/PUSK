@@ -357,8 +357,7 @@
   /* Bouncing PUSK watermark (liveness marker, behind the card) */
   #pusk-bouncer {
     position:absolute; top:0; left:0; z-index:0;
-    font-size:27px; font-weight:800; letter-spacing:1.5px;
-    color:#fff; opacity:0.34;
+    width: 82px; height:auto; opacity:0.34;
     pointer-events:none; -webkit-user-select:none; user-select:none;
     will-change: transform;
   }
@@ -404,86 +403,101 @@
     display:flex; flex-direction:column; justify-content:space-between;
   }
   .idf-logo {
-    font-size: calc(var(--card-short) * 0.055); font-weight:700;
+    font-size: calc(var(--card-short) * 0.056); font-weight:600;
     color:#B4444A; letter-spacing:-0.2px; line-height:1.05;
   }
   .idf-logo span {
-    display:block; font-size: calc(var(--card-short) * 0.019); color:#5B93A6;
+    display:block; font-size: calc(var(--card-short) * 0.020); color:#5B93A6;
     font-weight:700; letter-spacing:2px; margin-top:2px;
   }
   .idf-affil {
     margin-top: calc(var(--card-short)*0.05);
-    font-size: calc(var(--card-short) * 0.026); line-height:1.5; color:#111; font-weight:500;
+    font-size: calc(var(--card-short) * 0.035); line-height:1.45; color:#111; font-weight:500;
   }
-  .idf-name { font-size: calc(var(--card-short) * 0.039); font-weight:700; color:#111; }
+  .idf-name { font-size: calc(var(--card-short) * 0.045); font-weight:700; color:#111; }
   .idf-line {
-    font-size: calc(var(--card-short) * 0.032); color:#111;
+    font-size: calc(var(--card-short) * 0.041); color:#111;
     margin-top: calc(var(--card-short)*0.015); font-weight:500;
   }
   .idf-term {
-    font-size: calc(var(--card-short) * 0.038); font-weight:700;
+    font-size: calc(var(--card-short) * 0.048); font-weight:700;
     display:flex; align-items:center; gap:4px;
   }
   .idf-valid {
     margin-top: calc(var(--card-short)*0.012);
-    font-size: calc(var(--card-short) * 0.030); font-weight:600; color:#111;
+    font-size: calc(var(--card-short) * 0.038); font-weight:600; color:#111;
   }
 
-  .idf-right { flex:1; position:relative; overflow:hidden; background:#2b2b2b; }
+  .idf-right {
+    flex:1; position:relative; overflow:hidden; background:#2b2b2b;
+    border-radius: 9% 0 0 9% / 50% 0 0 50%;
+  }
   .idf-right img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-  /* curved sweep where the white panel meets the photo */
-  .idf-curve {
-    position:absolute; z-index:2; top:-2px; bottom:-2px; left:-2px; width:11%;
-    background:#fff; border-radius: 0 100% 100% 0 / 0 50% 50% 0;
-  }
   .idf-slogan {
-    position:absolute; z-index:3; left:26%; top:8%;
-    color:#fff; font-size: calc(var(--card-short) * 0.037); font-weight:700; line-height:1.32;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    position:absolute; z-index:3; left:26%; top:5%;
+    color:#fff; font-size: calc(var(--card-short) * 0.040); font-weight:700; line-height:1.3;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.45);
   }
-  .idf-circles { position:absolute; z-index:3; left:33%; top:26%; display:flex; gap: calc(var(--card-short)*0.022); }
+  .idf-circles {
+    position:absolute; z-index:3; left:38%; top:16%;
+    display:flex; gap: calc(var(--card-short)*0.024);
+  }
   .idf-circle {
-    width: calc(var(--card-short) * 0.092); height: calc(var(--card-short) * 0.092);
-    border-radius:50%; display:flex; align-items:center; justify-content:center;
-    color:#fff; font-size: calc(var(--card-short) * 0.042); font-weight:700;
+    width: calc(var(--card-short) * 0.100); height: calc(var(--card-short) * 0.100);
+    border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;
   }
+  .idf-circle svg { width:52%; height:52%; }
+  /* Las dos chapas: mismo tramo a lo largo de la tarjeta, una tras otra. */
   .idf-badges {
-    position:absolute; z-index:3; right:6%; top:58%;
-    display:flex; flex-direction:column; gap: calc(var(--card-short)*0.035); align-items:flex-end;
+    position:absolute; z-index:3; left:58.8%; width:35%; top:62%;
+    display:flex; flex-direction:column; gap: calc(var(--card-short)*0.028);
   }
   .idf-badge {
-    background:#fff; border-radius:8px;
-    padding: calc(var(--card-short)*0.022) calc(var(--card-short)*0.03);
-    display:flex; align-items:center; gap: calc(var(--card-short)*0.022);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+    width:100%; height: calc(var(--card-short) * 0.121);
+    background:#fff; border-radius:10px;
+    padding: 0 calc(var(--card-short)*0.012);
+    display:flex; align-items:center; justify-content:center;
+    gap: calc(var(--card-short)*0.012);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); overflow:hidden;
   }
   .idf-badge small {
-    font-size: calc(var(--card-short) * 0.017); color:#444; font-weight:700;
-    letter-spacing:0.4px; line-height:1.35;
+    font-size: calc(var(--card-short) * 0.016); color:#333; font-weight:600;
+    letter-spacing:0.2px; line-height:1.3; white-space:nowrap;
   }
-  .idf-badge-v { flex-direction:column; align-items:flex-start; gap:0; }
-  .idf-badge-v b {
-    font-size: calc(var(--card-short) * 0.044); letter-spacing:1.5px; color:#111;
-    font-weight:800; line-height:1.1;
+  /* Colocacion absoluta: dentro de un elemento rotado, el flex en columna
+     coloca los hijos fuera de la caja. */
+  .idf-badge-v { display:block; position:relative; padding:0; border-radius:16px; }
+  .idf-badge-v img {
+    position:absolute; left:7%; top:9%; width:74%; height:auto; display:block;
   }
+  .idf-badge-v small {
+    position:absolute; left:7%; bottom:12%;
+    font-size: calc(var(--card-short) * 0.017); color:#555;
+    letter-spacing:0.8px; white-space:nowrap;
+  }
+  .idf-badge-sl { display:block; position:relative; padding:0; }
+  .idf-badge-sl small {
+    position:absolute; left:5%; bottom:6%;
+    font-size: calc(var(--card-short) * 0.0145); white-space:nowrap;
+  }
+  .idf-badge-sl .idf-chip { position:absolute; top:6%; }
+  .idf-badge-sl .idf-chip:nth-of-type(1) { right:27%; }
+  .idf-badge-sl .idf-chip:nth-of-type(2) { right:4%; }
   .idf-chip {
-    width: calc(var(--card-short) * 0.062); height: calc(var(--card-short) * 0.062); border-radius:50%;
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    font-size: calc(var(--card-short) * 0.024); font-weight:800; color:#fff;
+    width: calc(var(--card-short) * 0.055); height: calc(var(--card-short) * 0.055);
+    border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size: calc(var(--card-short) * 0.020); font-weight:800; color:#fff;
   }
 
   /* ----- BACK ----- */
   .idb { width:100%; height:100%; background:#fff; color:#111; position:relative; }
-  .idb-stripe { position:absolute; left:0; right:0; top:10%; height:14.5%; background:#3A3A3A; }
-  .idb-lead { position:absolute; top:35%; left:24%; font-size: calc(var(--card-short) * 0.027); color:#111; }
-  .idb-logo {
-    position:absolute; top:44%; left:23.5%;
-    font-size: calc(var(--card-short) * 0.185); font-weight:800;
-    letter-spacing: calc(var(--card-short) * 0.022); color:#111; line-height:1;
-  }
+  .idb-stripe { position:absolute; left:0; right:0; top:11.5%; height:11.5%; background:#3A3A3A; }
+  .idb-lead { position:absolute; top:35%; left:23.5%; font-size: calc(var(--card-short) * 0.034); color:#111; }
+  .idb-logo { position:absolute; top:43%; left:23.5%; width:52%; height:auto; display:block; }
   .idb-note {
     position:absolute; left:0; right:0; bottom:9%; padding:0 7.5%;
-    font-size: calc(var(--card-short) * 0.027); line-height:1.5; color:#111;
+    font-size: calc(var(--card-short) * 0.034); line-height:1.5; color:#111;
   }
   .idb-note b { font-weight:700; }
 
@@ -883,7 +897,7 @@
 
 <!-- ============ DIGITAL ID OVERLAY ============ -->
 <div id="id-overlay">
-  <div id="pusk-bouncer">PUSK</div>
+  <img id="pusk-bouncer" src="img/logo-white.png" alt="">
 
   <div class="id-card-scene">
     <div class="id-card" id="id-card" onclick="flipCard()">
@@ -910,22 +924,21 @@
         </div>
         <div class="idf-right">
           <img src="img/id-photo.jpg" alt="">
-          <div class="idf-curve"></div>
           <div class="idf-slogan">Ett medlemskap<br>hela studentlivet</div>
           <div class="idf-circles">
-            <div class="idf-circle" style="background:#E2803C;">&#9834;</div>
-            <div class="idf-circle" style="background:#A65AA0;">&#10042;</div>
-            <div class="idf-circle" style="background:#49A3B5;">&#9707;</div>
+            <div class="idf-circle" style="background:#DE8A4F;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.6-7-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.6C19 15.4 12 20 12 20Z"/></svg></div>
+            <div class="idf-circle" style="background:#A96BA8;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg></div>
+            <div class="idf-circle" style="background:#5BA8B8;"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h7v14H4z"/><path d="M13 5h7v14h-7z"/></svg></div>
           </div>
           <div class="idf-badges">
-            <div class="idf-badge">
-              <small>GILTIGT TILL:<br>2027-09-10</small>
+            <div class="idf-badge idf-badge-sl">
+              <small>GILTIGT TILL: 2027-09-10</small>
               <div class="idf-chip" style="background:#2A8FCB;">SL</div>
-              <div class="idf-chip" style="background:#F2A63D;">&#9650;</div>
+              <div class="idf-chip" style="background:#F2A63D;">&#9995;</div>
             </div>
             <div class="idf-badge idf-badge-v">
               <small>VERIFIED BY</small>
-              <b>PUSK</b>
+              <img src="img/logo-black.png" alt="PUSK">
             </div>
           </div>
         </div>
@@ -938,7 +951,7 @@
         <div class="idb">
           <div class="idb-stripe"></div>
           <div class="idb-lead">Innehavaren av detta kort är medlem i:</div>
-          <div class="idb-logo">PUSK</div>
+          <img class="idb-logo" src="img/logo-black.png" alt="PUSK">
           <div class="idb-note">Alla studentrabatter hittar du på <b>studentkortet.se</b> eller i <b>PUSK-appen</b></div>
         </div>
        </div>
