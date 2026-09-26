@@ -356,11 +356,11 @@
   #id-overlay.active { opacity:1; pointer-events:auto; }
 
   /* Bouncing PUSK watermark (liveness marker, behind the card) */
-  #pusk-bouncer {
-    position:absolute; top:0; left:0; z-index:0;
-    width: 82px; height:auto; opacity:0.34;
-    pointer-events:none; -webkit-user-select:none; user-select:none;
-    will-change: transform;
+  /* Varios logos a la vez, por detras de la tarjeta, rumbo aleatorio. */
+  #pusk-layer { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .pusk-mark {
+    position:absolute; top:0; left:0; height:auto;
+    -webkit-user-select:none; user-select:none; will-change: transform;
   }
 
   /* A landscape card presented vertically: .id-card-scene holds the rotated
@@ -418,20 +418,30 @@
     flex:1; position:relative; overflow:hidden; background:#2b2b2b;
     border-radius: 9% 0 0 9% / 50% 0 0 50%;
   }
+  /* la original lleva la foto apagada hacia el borde que queda arriba en pantalla */
+  .idf-right::after {
+    content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:
+      linear-gradient(to left, rgba(0,0,0,0) 52%, rgba(0,0,0,0.42) 100%),
+      radial-gradient(ellipse 55% 45% at 0% 100%, rgba(0,0,0,0.5), rgba(0,0,0,0) 70%);
+  }
   .idf-right > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
   .idf-slogan {
-    position:absolute; z-index:3; left:26%; top:5%;
-    color:#fff; font-size: calc(var(--card-short) * 0.040); font-weight:400; line-height:1.32;
+    position:absolute; z-index:3; left:50%; transform:translateX(-50%); top:4.5%;
+    color:#fff; font-size: calc(var(--card-short) * 0.050); font-weight:400; line-height:1.3;
     font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.45);
+    text-align:center; white-space:nowrap;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.62), 0 1px 3px rgba(0,0,0,0.5);
   }
   .idf-circles {
-    position:absolute; z-index:3; left:38%; top:16%;
+    position:absolute; z-index:3; left:50%; transform:translateX(-50%); top:16%;
     display:flex; gap: calc(var(--card-short)*0.024);
   }
   .idf-circle {
     width: calc(var(--card-short) * 0.100); height: calc(var(--card-short) * 0.100);
     border-radius:50%; flex-shrink:0; overflow:hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.38);
     background-size:100% 100%; background-repeat:no-repeat; background-position:center;
   }
   /* Las dos chapas: mismo tramo a lo largo de la tarjeta, una tras otra. */
@@ -446,18 +456,18 @@
     position:relative; overflow:hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
-  .idf-badge-sl { width: calc(var(--card-short)*0.327); height: calc(var(--card-short)*0.133); }
-  .idf-badge-v  { width: calc(var(--card-short)*0.250); height: calc(var(--card-short)*0.109);
+  .idf-badge-sl { width: calc(var(--card-short)*0.247); height: calc(var(--card-short)*0.132); }
+  .idf-badge-v  { width: calc(var(--card-short)*0.247); height: calc(var(--card-short)*0.108);
                   border-radius:999px; }
   .idf-badge-sl img { position:absolute; top:9%; height:48%; width:auto; }
   .idf-badge-sl img.a { left:14%; }
   .idf-badge-sl img.b { left:50%; }
   /* la fecha va sobre una banda gris que ocupa el bajo de la caja */
   .idf-badge-sl small {
-    position:absolute; left:0; right:0; bottom:0; height:34%;
+    position:absolute; left:0; right:0; bottom:0; height:35%;
     background:#E7E7E7; color:#17171A;
     display:flex; align-items:center; justify-content:center;
-    font-size: calc(var(--card-short)*0.0205); font-weight:500;
+    font-size: calc(var(--card-short)*0.0185); font-weight:500;
     letter-spacing:0.1px; white-space:nowrap;
   }
   .idf-badge-v small {
@@ -471,12 +481,14 @@
 
   /* ----- BACK ----- */
   .idb { width:100%; height:100%; background:#fff; color:#111; position:relative; }
-  .idb-stripe { position:absolute; left:0; right:0; top:11.5%; height:11.5%; background:#3A3A3A; }
-  .idb-lead { position:absolute; top:35%; left:23.5%; font-size: calc(var(--card-short) * 0.034); color:#111; }
-  .idb-logo { position:absolute; top:43%; left:23.5%; width:52%; height:auto; display:block; }
+  .idb-stripe { position:absolute; left:0; right:0; top:10.5%; height:15.5%; background:#3A3A3A; }
+  .idb-lead { position:absolute; top:34%; left:50%; transform:translateX(-50%);
+              font-size: calc(var(--card-short) * 0.042); color:#111; white-space:nowrap; }
+  .idb-logo { position:absolute; top:44%; left:50%; transform:translateX(-50%); width:52%; height:auto; display:block; }
   .idb-note {
-    position:absolute; left:0; right:0; bottom:9%; padding:0 7.5%;
-    font-size: calc(var(--card-short) * 0.034); line-height:1.5; color:#111;
+    position:absolute; left:50%; transform:translateX(-50%); bottom:8%;
+    width:84%; text-align:center;
+    font-size: calc(var(--card-short) * 0.042); line-height:1.45; color:#111;
   }
   .idb-note b { font-weight:700; }
 
@@ -957,7 +969,7 @@
 
 <!-- ============ DIGITAL ID OVERLAY ============ -->
 <div id="id-overlay">
-  <img id="pusk-bouncer" src="img/logo-white.png" alt="">
+  <div id="pusk-layer"></div>
 
   <div class="id-card-scene">
     <div class="id-card" id="id-card" onclick="flipCard()">
@@ -1164,30 +1176,44 @@
     stopPuskBounce();
   }
 
-  // ---------- Bouncing PUSK watermark ----------
-  let puskRAF = null;
-  let puskState = null;
+  // ---------- Logos PUSK de fondo ----------
+  const PUSK_N = 7;
+  let puskMarks = [], puskRAF = null;
   function startPuskBounce(){
-    const el  = document.getElementById('pusk-bouncer');
-    const box = document.getElementById('id-overlay');
-    if (!el || !box || puskRAF) return;
-    if (!puskState) puskState = { x: 24, y: -1, vx: 0.42, vy: 0.18 };
-    const s = puskState;
+    const box  = document.getElementById('id-overlay');
+    const host = document.getElementById('pusk-layer');
+    if (!box || !host || puskRAF) return;
+    if (!puskMarks.length){
+      for (let i = 0; i < PUSK_N; i++){
+        const el = document.createElement('img');
+        el.src = 'img/logo-white.png';
+        el.className = 'pusk-mark';
+        el.style.width   = (54 + Math.random() * 54).toFixed(0) + 'px';
+        el.style.opacity = (0.16 + Math.random() * 0.22).toFixed(2);
+        host.appendChild(el);
+        puskMarks.push({ el:el, ready:false, x:0, y:0, vx:0, vy:0 });
+      }
+    }
     function step(){
-      const w = el.offsetWidth, h = el.offsetHeight;
-      const card = document.querySelector('.id-card-scene').getBoundingClientRect();
-      const ctl  = document.querySelector('.id-overlay-controls').getBoundingClientRect();
-      // Roam the open background strip under the card, never behind it.
-      const minX = 14, maxX = Math.max(minX, box.clientWidth - 14 - w);
-      const minY = card.bottom + 8;
-      const maxY = Math.max(minY, ctl.top - 8 - h);
-      if (s.y < 0) s.y = minY + (maxY - minY) * 0.45;
-      s.x += s.vx; s.y += s.vy;
-      if (s.x <= minX) { s.x = minX; s.vx =  Math.abs(s.vx); }
-      if (s.x >= maxX) { s.x = maxX; s.vx = -Math.abs(s.vx); }
-      if (s.y <= minY) { s.y = minY; s.vy =  Math.abs(s.vy); }
-      if (s.y >= maxY) { s.y = maxY; s.vy = -Math.abs(s.vy); }
-      el.style.transform = 'translate(' + s.x + 'px,' + s.y + 'px)';
+      const W = box.clientWidth, H = box.clientHeight;
+      for (const m of puskMarks){
+        const w = m.el.offsetWidth || 80, h = m.el.offsetHeight || 20;
+        if (!m.ready){
+          // aparece en cualquier punto, con rumbo y velocidad al azar
+          m.x = Math.random() * Math.max(1, W - w);
+          m.y = Math.random() * Math.max(1, H - h);
+          const a = Math.random() * Math.PI * 2;
+          const sp = 0.22 + Math.random() * 0.36;
+          m.vx = Math.cos(a) * sp; m.vy = Math.sin(a) * sp;
+          m.ready = true;
+        }
+        m.x += m.vx; m.y += m.vy;
+        if (m.x <= 0)       { m.x = 0;     m.vx =  Math.abs(m.vx); }
+        if (m.x + w >= W)   { m.x = W - w; m.vx = -Math.abs(m.vx); }
+        if (m.y <= 0)       { m.y = 0;     m.vy =  Math.abs(m.vy); }
+        if (m.y + h >= H)   { m.y = H - h; m.vy = -Math.abs(m.vy); }
+        m.el.style.transform = 'translate(' + m.x.toFixed(1) + 'px,' + m.y.toFixed(1) + 'px)';
+      }
       puskRAF = requestAnimationFrame(step);
     }
     step();
@@ -1196,6 +1222,7 @@
     if (puskRAF) cancelAnimationFrame(puskRAF);
     puskRAF = null;
   }
+
   function flipCard(){
     const card = document.getElementById('id-card');
     const flipped = card.classList.toggle('flipped');
