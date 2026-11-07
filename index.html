@@ -1047,7 +1047,7 @@
       <button class="id-qr-btn" onclick="event.stopPropagation()">
         <img src="img/ctl-qr.png" alt="QR">
       </button>
-      <button class="id-qr-btn" onclick="refreshQr()">
+      <button class="id-qr-btn" id="id-refresh" onclick="refreshQr()">
         <img src="img/ctl-refresh.png" alt="">
       </button>
     </div>
@@ -1209,16 +1209,15 @@
     try { localStorage.setItem(CARD_KEY, JSON.stringify(d)); } catch(e) {}
     setCardEdit(false);
   }
-  // Cinco toques sobre el logo abren la edicion (no voltean la tarjeta).
+  // Tres toques sobre el icono de recargar abren la edicion.
   document.addEventListener('DOMContentLoaded', () => {
-    const trigger = document.querySelector('#id-card .idf-logo');
+    const trigger = document.getElementById('id-refresh');
     if (!trigger) return;
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
+    trigger.addEventListener('click', () => {
       cardTaps++;
       clearTimeout(cardTimer);
       cardTimer = setTimeout(() => { cardTaps = 0; }, 1600);
-      if (cardTaps >= 5) { cardTaps = 0; setCardEdit(true); }
+      if (cardTaps >= 3) { cardTaps = 0; setCardEdit(true); }
     });
   });
 
