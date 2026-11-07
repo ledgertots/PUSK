@@ -557,6 +557,18 @@
   }
   #tk-overlay.editing .tk-save { display:block; }
 
+  /* ---------- Edicion de la tarjeta ---------- */
+  .id-card.editing [data-c] {
+    background:#FFF6D6; outline:1.5px dashed #C9A227; border-radius:3px;
+  }
+  #id-save {
+    display:none; position:absolute; left:18px; right:18px;
+    bottom: calc(var(--safe-bottom) + 74px); z-index:8;
+    padding:14px; border:none; border-radius:12px;
+    background:#fff; color:#111; font-size:16px; font-weight:700;
+  }
+  #id-overlay.editing #id-save { display:block; }
+
   /* ---------- Side Menu ---------- */
   #side-menu-backdrop {
     position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index: 700;
@@ -972,19 +984,19 @@
   <div id="pusk-layer"></div>
 
   <div class="id-card-scene">
-    <div class="id-card" id="id-card" onclick="flipCard()">
+    <div class="id-card" id="id-card" onclick="flipCard(event)">
       <!-- FRONT -->
       <div class="id-face front">
        <div class="id-face-inner">
         <div class="idf-left">
           <img class="idf-logo" src="img/studentlund.png" alt="Studentlund">
-          <div class="idf-affil">Hallands Nation<br>Akademiska Föreningen<br>LundaEkonomerna</div>
-          <div class="idf-name">Antonio Ramos Morales</div>
-          <div class="idf-pnr">060609-T130</div>
-          <div class="idf-num">6032 9211 1032 6026</div>
-          <div class="idf-valkod">Valkod: 379845</div>
-          <div class="idf-term">HT 2026 <img src="img/sj.png" alt=""></div>
-          <div class="idf-valid">GILTIGT TILL: 2027-02-10</div>
+          <div class="idf-affil" data-c="affil">Hallands Nation<br>Akademiska Föreningen<br>LundaEkonomerna</div>
+          <div class="idf-name"   data-c="name">Antonio Ramos Morales</div>
+          <div class="idf-pnr"    data-c="pnr">060609-T130</div>
+          <div class="idf-num"    data-c="num">6032 9211 1032 6026</div>
+          <div class="idf-valkod" data-c="valkod">Valkod: 379845</div>
+          <div class="idf-term"><span data-c="term">HT 2026</span> <img src="img/sj.png" alt=""></div>
+          <div class="idf-valid"  data-c="valid">GILTIGT TILL: 2027-02-10</div>
         </div>
         <div class="idf-right">
           <img src="img/id-photo.jpg" alt="">
@@ -1022,6 +1034,8 @@
       </div>
     </div>
   </div>
+
+  <button id="id-save" onclick="saveCard()">Guardar</button>
 
   <div class="id-overlay-controls">
     <button class="id-close-btn" onclick="closeIdOverlay()">Close</button>
@@ -1166,12 +1180,56 @@
     });
   });
 
+  // ---------- Edicion de los campos de la tarjeta ----------
+  const CARD_KEY = 'pusk-card';
+  let cardEditing = false, cardTaps = 0, cardTimer = null;
+  function loadCard(){
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(CARD_KEY) || '{}'); } catch(e) {}
+    document.querySelectorAll('#id-card [data-c]').forEach(el => {
+      const v = d[el.dataset.c];
+      if (typeof v === 'string' && v.trim()) el.innerHTML = v;
+    });
+  }
+  function setCardEdit(on){
+    cardEditing = on;
+    document.getElementById('id-card').classList.toggle('editing', on);
+    document.getElementById('id-overlay').classList.toggle('editing', on);
+    document.querySelectorAll('#id-card [data-c]').forEach(el => {
+      el.contentEditable = on ? 'true' : 'false';
+      el.spellcheck = false;
+    });
+    if (!on) cardTaps = 0;
+  }
+  function saveCard(){
+    const d = {};
+    document.querySelectorAll('#id-card [data-c]').forEach(el => {
+      d[el.dataset.c] = el.innerHTML.trim();
+    });
+    try { localStorage.setItem(CARD_KEY, JSON.stringify(d)); } catch(e) {}
+    setCardEdit(false);
+  }
+  // Cinco toques sobre el logo abren la edicion (no voltean la tarjeta).
+  document.addEventListener('DOMContentLoaded', () => {
+    const trigger = document.querySelector('#id-card .idf-logo');
+    if (!trigger) return;
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cardTaps++;
+      clearTimeout(cardTimer);
+      cardTimer = setTimeout(() => { cardTaps = 0; }, 1600);
+      if (cardTaps >= 5) { cardTaps = 0; setCardEdit(true); }
+    });
+  });
+
   // ---------- Digital ID overlay ----------
   function openIdOverlay(){
+    loadCard();
     document.getElementById('id-overlay').classList.add('active');
     startPuskBounce();
   }
   function closeIdOverlay(){
+    setCardEdit(false);
     document.getElementById('id-overlay').classList.remove('active');
     stopPuskBounce();
   }
@@ -1188,8 +1246,8 @@
         const el = document.createElement('img');
         el.src = 'img/logo-white.png';
         el.className = 'pusk-mark';
-        el.style.width   = (54 + Math.random() * 54).toFixed(0) + 'px';
-        el.style.opacity = (0.16 + Math.random() * 0.22).toFixed(2);
+        el.style.width   = '82px';
+        el.style.opacity = '1';
         host.appendChild(el);
         puskMarks.push({ el:el, ready:false, x:0, y:0, vx:0, vy:0 });
       }
@@ -1203,7 +1261,7 @@
           m.x = Math.random() * Math.max(1, W - w);
           m.y = Math.random() * Math.max(1, H - h);
           const a = Math.random() * Math.PI * 2;
-          const sp = 0.22 + Math.random() * 0.36;
+          const sp = 0.30;
           m.vx = Math.cos(a) * sp; m.vy = Math.sin(a) * sp;
           m.ready = true;
         }
@@ -1223,7 +1281,9 @@
     puskRAF = null;
   }
 
-  function flipCard(){
+  function flipCard(ev){
+    // en modo edicion, tocar un campo lo edita; tocar fuera sigue volteando
+    if (cardEditing && ev && ev.target && ev.target.closest && ev.target.closest('[data-c]')) return;
     const card = document.getElementById('id-card');
     const flipped = card.classList.toggle('flipped');
     document.getElementById('pager-1').classList.toggle('active', !flipped);
