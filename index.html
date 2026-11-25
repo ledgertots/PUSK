@@ -322,6 +322,13 @@
   }
   .profile-name { font-size:16px; font-weight:700; margin-bottom:3px; }
   .profile-email { font-size:13px; color:var(--text-dim); }
+  .profile-user-card.editing [data-p] { background:#FFF6D6; color:#111; outline:1.5px dashed #C9A227; border-radius:4px; padding:1px 3px; }
+  .pf-save {
+    display:none; margin: -8px 16px 20px; width: calc(100% - 32px);
+    padding:14px; border:none; border-radius:12px;
+    background:#fff; color:#111; font-size:16px; font-weight:700;
+  }
+  .pf-save.show { display:block; }
 
   .menu-group { margin: 0 16px 18px; background:var(--surface-2); border-radius:16px; overflow:hidden; }
   .menu-row {
@@ -864,17 +871,18 @@
     </div>
 
     <div class="profile-user-card">
-      <div class="profile-avatar">AR</div>
-      <div>
-        <div class="profile-name">Antonio Ramos Morales</div>
-        <div class="profile-email">antonio.ramos@student.lu.se</div>
+      <div class="profile-avatar" id="pf-avatar">AR</div>
+      <div style="flex:1;min-width:0;">
+        <div class="profile-name" data-p="name">Antonio Ramos Morales</div>
+        <div class="profile-email" data-p="email">antonio.ramos@student.lu.se</div>
       </div>
     </div>
+    <button class="pf-save" id="pf-save" onclick="saveProfile()">Guardar</button>
 
     <div class="menu-group">
       <div class="menu-row">
         <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="15" x2="10" y2="15"/><circle cx="8" cy="10" r="1.5"/></svg></div>
-        <div class="m-label">Edit details</div>
+        <div class="m-label" onclick="setProfileEdit(true)">Edit details</div>
         <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </div>
       <div class="menu-row">
@@ -1127,6 +1135,48 @@
     document.getElementById('side-menu').classList.remove('active');
     document.getElementById('side-menu-backdrop').classList.remove('active');
   }
+
+  // ---------- Edicion del perfil (nombre y correo) ----------
+  const PF_KEY = 'pusk-profile';
+  function pfInitials(n){
+    const w = n.trim().split(/\s+/).filter(Boolean);
+    if (!w.length) return '';
+    return ((w[0][0] || '') + (w.length > 1 ? w[1][0] : '')).toUpperCase();
+  }
+  function loadProfile(){
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem(PF_KEY) || '{}'); } catch(e) {}
+    document.querySelectorAll('.profile-user-card [data-p]').forEach(el => {
+      const v = d[el.dataset.p];
+      if (typeof v === 'string' && v.trim()) el.textContent = v;
+    });
+    const n = document.querySelector('.profile-user-card [data-p="name"]');
+    if (n) document.getElementById('pf-avatar').textContent = pfInitials(n.textContent);
+  }
+  function setProfileEdit(on){
+    document.querySelector('.profile-user-card').classList.toggle('editing', on);
+    document.getElementById('pf-save').classList.toggle('show', on);
+    document.querySelectorAll('.profile-user-card [data-p]').forEach(el => {
+      el.contentEditable = on ? 'true' : 'false';
+      el.spellcheck = false;
+    });
+    if (on) document.querySelector('.profile-user-card [data-p="name"]').focus();
+  }
+  function saveProfile(){
+    const d = {};
+    document.querySelectorAll('.profile-user-card [data-p]').forEach(el => {
+      d[el.dataset.p] = el.textContent.trim();
+    });
+    try { localStorage.setItem(PF_KEY, JSON.stringify(d)); } catch(e) {}
+    setProfileEdit(false);
+    loadProfile();
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    loadProfile();
+    document.querySelectorAll('.profile-user-card [data-p]').forEach(el => {
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+    });
+  });
 
   // ---------- My tickets ----------
   const TK_KEY = 'pusk-ticket';
